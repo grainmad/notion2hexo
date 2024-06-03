@@ -23,15 +23,26 @@ jobs:
 
     - name: Checkout this repository
       uses: actions/checkout@v4
-
-    - name: Set up ssh-agent
-      uses: yakuhzi/setup-ssh-agent@v2
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       
-    - name: Checkout target repository
+    - name: Configuration environment
+      env:
+        SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
       run: |
-        git clone git@github.com:grainmad/grainmad_blog.git grainmad_blog
+        sudo timedatectl set-timezone "Asia/Shanghai"
+        mkdir -p ~/.ssh/
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        git config --global user.name grainmad[notion2hexo bot]
+        git config --global user.email grainmad@notion2hexo.bot
+
+
+    - name: Checkout deploy repo
+      uses: actions/checkout@v4
+      with:
+        repository: grainmad/grainmad_blog
+        ref: main
+        path: grainmad_blog
     
     - name: python environment
       uses: actions/setup-python@v4.5.0
