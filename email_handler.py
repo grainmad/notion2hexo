@@ -31,7 +31,7 @@ mail.select("inbox")
 # 搜索所有未读邮件
 status, messages = mail.search(None, '(UNSEEN FROM "export-noreply@mail.notion.so")')
 
-print(status)
+print("登录邮箱", status)
 
 # 获取邮件ID列表
 mail_ids = messages[0].split()
@@ -70,7 +70,7 @@ if mail_ids:
                     if content_type == "text/html" and "attachment" not in content_disposition:
                         # print(f"Body: {body}")
                         download_link = re.search(r'href="(.*?)">here</a>', body).group(1)
-                        download_name=unquote(download_link.split("downloadName=")[-1])
+                        download_name = download_link.split("Export-")[-1]
                         
                         print("下载文件名", download_name)
                         print("下载链接", download_link)

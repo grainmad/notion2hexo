@@ -49,6 +49,7 @@ jobs:
         HEXO_BLOG: grainmad_blog
       run: |
         pip install -r requirements.txt
+        mkdir uploads
         python email_handler.py
   
     
