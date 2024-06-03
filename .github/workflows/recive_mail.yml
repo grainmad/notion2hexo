@@ -19,29 +19,16 @@ jobs:
     - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
     - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
     - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-
+    
     - name: Checkout this repository
       uses: actions/checkout@v4
-      
-    - name: Configuration environment
-      env:
-        SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-      run: |
-        sudo timedatectl set-timezone "Asia/Shanghai"
-        mkdir -p ~/.ssh/
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
-        git config --global user.name grainmad[notion2hexo bot]
-        git config --global user.email grainmad@notion2hexo.bot
 
-
-    - name: Checkout deploy repo
+    - name: Checkout blog repository
       uses: actions/checkout@v4
       with:
         repository: grainmad/grainmad_blog
-        ref: main
         path: grainmad_blog
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
     
     - name: python environment
       uses: actions/setup-python@v4.5.0
@@ -53,8 +40,6 @@ jobs:
     - name: List files in the repository
       run: |
         ls ${{ github.workspace }}
-
-
     - name: gen blog file
       env:
         EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
@@ -70,7 +55,6 @@ jobs:
     - name: List files in the repository again
       run: |
         ls ${{ github.workspace }}
-
     - run: echo "🍏 This job's status is ${{ job.status }}."
 
     # - name: Commit and push changes
