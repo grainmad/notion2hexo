@@ -23,12 +23,14 @@ jobs:
     - name: Checkout this repository
       uses: actions/checkout@v4
 
-    - name: Checkout blog repository
-      uses: actions/checkout@v4
+    - name: Set up ssh-agent
+      uses: yakuhzi/setup-ssh-agent@v2
       with:
-        repository: grainmad/grainmad_blog
-        path: grainmad_blog
-        ssh-key: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      - name: Checkout target repository
+      run: |
+        git clone git@github.com:grainmad/grainmad_blog.git grainmad_blog
     
     - name: python environment
       uses: actions/setup-python@v4.5.0
