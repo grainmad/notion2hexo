@@ -59,6 +59,7 @@ jobs:
     - run: echo "🍏 This job's status is ${{ job.status }}."
 
     - name: Commit and push changes
+      if: ${{ cd grainmad_blog && git status -s }}
       run: |
         git config --global user.name "github-actions[notion2hexo bot]"
         git config --global user.email "github-actions[notion2hexo bot]@users.noreply.github.com"
