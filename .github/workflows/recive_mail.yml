@@ -58,13 +58,13 @@ jobs:
         ls ${{ github.workspace }}
     - run: echo "🍏 This job's status is ${{ job.status }}."
 
-    # - name: Commit and push changes
-    #   run: |
-    #     git config --global user.name "github-actions[notion2hexo bot]"
-    #     git config --global user.email "github-actions[notion2hexo bot]@users.noreply.github.com"
-    #     cd grainmad_blog
-    #     git add .
-    #     git commit -m "notion2hexo synchronization"
-    #     git push origin main
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "github-actions[notion2hexo bot]"
+        git config --global user.email "github-actions[notion2hexo bot]@users.noreply.github.com"
+        cd grainmad_blog
+        git add .
+        git commit -m "notion2hexo synchronization"
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
