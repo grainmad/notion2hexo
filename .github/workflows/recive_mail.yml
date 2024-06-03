@@ -1,0 +1,110 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run.
+# on:
+#   # Triggers the workflow on push or pull request events but only for the main branch
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
+on:
+  schedule:
+    - cron: "0 0,8,16 * * *" # 每天0,8,16点执行 , 去掉此处注释开启触发
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4.5.0
+        with:
+          python-version: "3.10"
+      - name: install dependency
+        run: pip3 install requests
+      - name: run notion_backup.py
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }} # 在后台配置好token,或者用NOTION_EMAIL和NOTION_PASSWORD也可以
+        run: |
+          echo '开始执行'
+          python email_handler.py
+          echo '执行完成'
+
+
+name: notion2hexo
+
+
+on:
+  schedule:
+    - cron: "0 */5 * * *"  # "0 0,8,16 * * *" # 每天0,8,16点执行 , 去掉此处注释开启触发
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+    - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+    - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+    
+    - name: Checkout this repository
+      uses: actions/checkout@v4
+
+    - name: Checkout blog repository
+      uses: actions/checkout@v4
+      with:
+        repository: grainmad/grainmad_blog
+        path: grainmad_blog
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+    
+    - name: python environment
+      uses: actions/setup-python@v4.5.0
+      with:
+        python-version: "3.10"
+
+    - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+    - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+    - name: List files in the repository
+      run: |
+        ls ${{ github.workspace }}
+
+
+    - name: gen blog file
+      env:
+        EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        NOTION_FILE_TOKEN: ${{ secrets.NOTION_FILE_TOKEN }}
+        IMAP_SERVER: imap.qq.com
+        HEXO_BLOG: grainmad_blog
+      run: |
+        pip3 install requirements.txt
+        python email_handler.py
+  
+    
+    - name: List files in the repository again
+      run: |
+        ls ${{ github.workspace }}
+
+    - run: echo "🍏 This job's status is ${{ job.status }}."
+
+    # - name: Commit and push changes
+    #   run: |
+    #     git config --global user.name "github-actions[notion2hexo bot]"
+    #     git config --global user.email "github-actions[notion2hexo bot]@users.noreply.github.com"
+    #     cd grainmad_blog
+    #     git add .
+    #     git commit -m "notion2hexo synchronization"
+    #     git push origin main
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

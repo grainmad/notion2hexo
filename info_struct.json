@@ -1,0 +1,96 @@
+// notion 00
+//     a 01.md
+//     c 02.md
+//     a 01
+//         b 03.md
+//     c 02
+//         d.png
+
+
+{
+    "type":"dir",
+    "leafmd": false,
+    "dirid": null,
+    "name":"notion",
+    "hash":"00",
+    "ancestor":[],
+    "ancestorhash":[],
+    "fileson":[
+        {
+            "type":"markdown",
+            "leafmd": false, // 是否为叶子md
+            "dirid": 0, // 对于同名文件夹所在dirson下标
+            "name":"a",
+            "hash":"01",
+            "ancestor":["notion"],
+            "ancestorhash":["00"],
+            "fileson":[],
+            "dirson":[]
+
+        },
+        {
+            "type":"markdown",
+            "leafmd": true,
+            "dirid": 1,
+            "name":"c",
+            "hash":"02",
+            "ancestor":["notion"],
+            "ancestorhash":["00"],
+            "fileson":[],
+            "dirson":[]
+
+        }
+    ],
+    "dirson":[
+        {
+            "type":"dir",
+            "leafmd": false,
+            "dirid": null,
+            "name":"a",
+            "hash":"01",
+            "ancestor":["notion"],
+            "ancestorhash":["00"],
+            "fileson":[
+                {
+                    "type":"markdown",
+                    "leafmd": true,
+                    "dirid": null,
+                    "name":"b",
+                    "hash":"03",
+                    "ancestor":["notion", "a"],
+                    "ancestorhash":["00", "01"],
+                    "fileson":[],
+                    "dirson":[]
+        
+                }
+            ],
+            "dirson":[]
+
+        },
+        {
+            "type":"dir",
+            "leafmd": false,
+            "dirid": null,
+            "name":"c",
+            "hash":"02",
+            "ancestor":["notion"],
+            "ancestorhash":["00"],
+            "fileson":[
+                {
+                    "type":"png",
+                    "leafmd": false,
+                    "dirid": null,
+                    "name":"d",
+                    "hash": null,
+                    "ancestor":["notion", "c"],
+                    "ancestorhash":["00", "02"],
+                    "fileson":[],
+                    "dirson":[]
+        
+                }
+            ],
+            "dirson":[]
+
+        }
+    ]
+}
