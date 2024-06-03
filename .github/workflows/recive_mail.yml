@@ -46,7 +46,7 @@ jobs:
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         NOTION_FILE_TOKEN: ${{ secrets.NOTION_FILE_TOKEN }}
         IMAP_SERVER: imap.qq.com
-        HEXO_BLOG: grainmad_blog
+        HEXO_BLOG: ${{ github.workspace }}/grainmad_blog
       run: |
         pip install -r requirements.txt
         mkdir uploads
