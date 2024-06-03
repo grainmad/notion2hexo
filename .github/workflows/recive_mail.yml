@@ -48,7 +48,7 @@ jobs:
         IMAP_SERVER: imap.qq.com
         HEXO_BLOG: grainmad_blog
       run: |
-        pip3 install -r requirements.txt
+        pip install -r requirements.txt
         python email_handler.py
   
     
