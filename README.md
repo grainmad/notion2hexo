@@ -4,8 +4,10 @@
 
 将Notion笔记页面及嵌套的子页面同步到Hexo博客中
 
-![next](image/image.png)  ![notion](image/image-1.png)  
-![next](image/image-3.png) ![notion](image/image-2.png)  
+![next](image/image.png)  
+![notion](image/image-1.png)  
+![next](image/image-3.png) 
+![notion](image/image-2.png)  
 
 # 如何使用
 1. 将需要同步的Notion页面导出为markdown文件压缩包

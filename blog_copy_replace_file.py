@@ -50,7 +50,8 @@ def hexo_blog_cmp(newblog, postblog, data, fdata):
     # 生成新文章内容
     with open(newblog, 'r', encoding="utf8") as f:
         new_blog_file = f.readlines()
-    if data['leafmd'] and len(new_blog_file)>15 : new_blog_file[14] += "<!--more-->"
+    # <!--more--> 在代码块中不生效
+    # if data['leafmd'] and len(new_blog_file)>15 : new_blog_file[14] += "<!--more-->"
     
     # 旧文章存在，生成时间延续旧文章的，更新时间取决于内容是否一致
     if os.path.isfile(postblog): # 存在，获取创建时间
