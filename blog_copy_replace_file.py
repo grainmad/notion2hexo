@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import markdown
 import zipUtil
 from back_nohash_zip import copyfile, remove_hash, get_hash
-
+import html
 
 
 load_dotenv()
@@ -28,9 +28,10 @@ def gen_dscr(data, fdata):
             
 
     dfs(data, fdata, "")
-    html = markdown.markdown(md).replace("\n", "")
-    html = f"\"{html[:3]} style='text-align: left;'{html[3:]}\""
-    return html
+    md = html.escape(md)
+    ht = markdown.markdown(md).replace("\n", "")
+    ht = f'{ht[:3]} style="text-align:left;"{ht[3:]}'
+    return ht
 
 def hexo_blog_cmp(newblog, postblog, data, fdata):
     curtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -87,12 +88,12 @@ def hexo_blog_cmp(newblog, postblog, data, fdata):
         f"title: \"{blog_head['title']}\"\n",
         f"date: {blog_head['date']}\n",
         f"updated: {blog_head['updated']}\n",
-        f"tag: [{ ', '.join(blog_head['tag']) }]\n",
-        f"categories: {blog_head['categories']}\n",
+        "tag: [{}]\n".format(", ".join([f'\"{i}\"' for i in blog_head["tag"]])),
+        f"categories: \"{blog_head['categories']}\"\n",
         f"mathjax: {'true' if blog_head['mathjax'] else 'false'}\n",
         f"comments: {'true' if blog_head['comments'] else 'false'}\n",
         # 注意description内不能有'
-        f"description: {blog_head['description']}\n",
+        f"description: \'{blog_head['description']}\'\n",
         "---\n",
     ]
     new_blog_file = new_blog_head + new_blog_file
