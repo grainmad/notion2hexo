@@ -50,8 +50,21 @@ def hexo_blog_cmp(newblog, postblog, data, fdata):
     # 生成新文章内容
     with open(newblog, 'r', encoding="utf8") as f:
         new_blog_file = f.readlines()
-    # <!--more--> 在代码块中不生效
-    # if data['leafmd'] and len(new_blog_file)>15 : new_blog_file[14] += "<!--more-->"
+        
+    # <!--more--> 在代码块中不生效 落在代码块内则延续到代码块结束
+    if data['leafmd'] and len(new_blog_file)>=20 : 
+        def add_more(s):
+            return f"{s[:-1]}<!--more-->\n"
+        code_sign = 0
+        for i in range(20):
+            if new_blog_file[i].startswith("```"): code_sign+=1
+        if code_sign % 2 == 1: # 落在第(code_sign+1)//2个代码块内
+            for i in range(20, len(new_blog_file)):
+                if new_blog_file[i].startswith("```"): 
+                    new_blog_file[i] = add_more(new_blog_file[i])
+                    break
+        else:
+            new_blog_file[19] = add_more(new_blog_file[19])
     
     # 旧文章存在，生成时间延续旧文章的，更新时间取决于内容是否一致
     if os.path.isfile(postblog): # 存在，获取创建时间
@@ -161,5 +174,36 @@ def process(workdir, filename):
     if os.path.isfile(filename):
         os.remove(filename)
 
+# 没有替换博客文件夹，没有删除生成的文件
+def process_local(workdir, filename):
+    os.chdir(workdir) #修改当前工作目录
+    print("cwd", os.getcwd()) #获取当前工作目录
+    
+    dirhash, unzipdir = None, filename.replace(".zip", "")
+
+    # 解压
+    zipUtil.unzip(filename)
+
+    # # 备份无哈希结构的压缩包
+    copyfile(unzipdir, unzipdir+"_bk")
+    rec_h = get_hash(unzipdir)
+    remove_hash(rec_h, unzipdir+"_bk")
+    zipUtil.zip_dir(unzipdir+"_bk", unzipdir+"_bk.zip")
+    shutil.rmtree(unzipdir+"_bk")
+
+    # 修改目录名称
+    for i in os.listdir(unzipdir):
+        if os.path.isdir(f"{os.getcwd()}/{unzipdir}/{i}"):
+            dirhash = i.split(" ")[-1][-12:]
+            shutil.move(unzipdir, f"notion {dirhash}")
+            unzipdir = f"notion {dirhash}"
+            break
+
+    data = blog_get_info.list_files(unzipdir, [], [])
+    cr(os.getcwd(), os.getcwd(), data)
+    oldblog = f"{HEXO_BLOG}/source/_posts/{dirhash}"
+    if os.path.isdir(oldblog):
+        shutil.rmtree(oldblog)
+
 if __name__ == '__main__':
-    process("uploads", "notion-export.zip")
+    process_local("uploads", "cfc660a8-dc20-4cd4-beb2-92ad66330fc0_Export-2046ac04-5f6f-4208-a321-7af39d5d30f1.zip")

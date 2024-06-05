@@ -6,7 +6,7 @@ name: notion2hexo
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # "0 0,8,16 * * *" # 每天0,8,16点执行 , 去掉此处注释开启触发
+    - cron: '*/30 * * * *'  # 30 分钟一次
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -16,9 +16,6 @@ jobs:
 
     steps:
     
-    - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-    - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-    - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
     
     - name: Checkout this repository
       uses: actions/checkout@v4
@@ -35,11 +32,6 @@ jobs:
       with:
         python-version: "3.10"
 
-    - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-    - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-    - name: List files in the repository
-      run: |
-        ls ${{ github.workspace }}
     - name: gen blog file
       env:
         EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
@@ -52,12 +44,6 @@ jobs:
         mkdir uploads
         python email_handler.py
   
-    
-    - name: List files in the repository again
-      run: |
-        ls ${{ github.workspace }}
-    - run: echo "🍏 This job's status is ${{ job.status }}."
-
     - name: Commit and push changes
       run: |
         cd grainmad_blog
