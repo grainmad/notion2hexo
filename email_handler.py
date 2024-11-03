@@ -1,5 +1,6 @@
 import imaplib
 import email
+import html
 from email.header import decode_header
 import os
 import re
@@ -74,10 +75,13 @@ if mail_ids:
                         
                         print("下载文件名", download_name)
                         print("下载链接", download_link)
+                        download_link = html.unescape(download_link)
+                        print("unescape 下载文件名", download_link)
 
                         mail.store(latest_email_id, '+FLAGS', '\\Seen')
                         
                         with requests.get(download_link, stream=True, headers={'cookie': f'file_token={NOTION_FILE_TOKEN}'}) as r:
+                            print(f"status code {r.status_code}")
                             with open(f"uploads/{download_name}", 'wb') as f:
                                 shutil.copyfileobj(r.raw, f)
                         
