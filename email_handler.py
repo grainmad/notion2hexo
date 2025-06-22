@@ -70,7 +70,7 @@ if mail_ids:
                         pass
                     if content_type == "text/html" and "attachment" not in content_disposition:
                         # print(f"Body: {body}")
-                        download_link = re.search(r'href="(.*?)">here</a>', body).group(1)
+                        download_link = re.search(r'href="(.*?)">(here|此处)</a>', body).group(1)
                         download_name = download_link.split("Export-")[-1]
                         
                         print("下载文件名", download_name)
