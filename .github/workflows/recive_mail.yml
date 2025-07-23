@@ -1,13 +1,8 @@
-# This is a basic workflow to help you get started with Actions
-
-
 name: notion2hexo
-
 
 on:
   schedule:
     - cron: '*/30 * * * *'  # 30 分钟一次
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -15,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    
-    
     - name: Checkout this repository
       uses: actions/checkout@v4
 
@@ -26,11 +19,24 @@ jobs:
         repository: grainmad/grainmad_blog
         path: grainmad_blog
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-    
-    - name: python environment
-      uses: actions/setup-python@v4.5.0
+
+    # 新增的缓存步骤
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
       with:
         python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
 
     - name: gen blog file
       env:
@@ -40,7 +46,6 @@ jobs:
         IMAP_SERVER: imap.qq.com
         HEXO_BLOG: ${{ github.workspace }}/grainmad_blog
       run: |
-        pip install -r requirements.txt
         mkdir uploads
         python email_handler.py
   
