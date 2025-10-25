@@ -183,6 +183,15 @@ def process_local(workdir, filename):
     
     dirhash, unzipdir = None, filename.replace(".zip", "")
 
+    #### 
+    # 解压 tmd里面又包了一层zip
+    zipUtil.unzip(filename) # 不包含 ExportBlock- 的后缀
+    # 迁移压缩包到uploads目录
+    shutil.move(f"{unzipdir}/ExportBlock-{unzipdir}-Part-1.zip", ".")
+    filename = f"ExportBlock-{unzipdir}-Part-1.zip"
+    unzipdir = filename.replace(".zip", "")
+    ####
+
     # 解压
     zipUtil.unzip(filename)
 
@@ -205,4 +214,4 @@ def process_local(workdir, filename):
     cr(os.getcwd(), os.getcwd(), data)
 
 if __name__ == '__main__':
-    process_local("uploads", "cfc660a8-dc20-4cd4-beb2-92ad66330fc0_Export-2046ac04-5f6f-4208-a321-7af39d5d30f1.zip")
+    process_local("uploads", "e25735a4-43e8-4ec3-baac-82d968662250.zip")
