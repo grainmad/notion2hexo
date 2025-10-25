@@ -141,6 +141,15 @@ def process(workdir, filename):
     
     dirhash, unzipdir = None, filename.replace(".zip", "")
 
+    #### 
+    # 解压 tmd里面又包了一层zip
+    zipUtil.unzip(filename) # 不包含 ExportBlock- 的后缀
+    # 迁移压缩包到uploads目录
+    shutil.move(f"{unzipdir}/ExportBlock-{unzipdir}-Part-1.zip", ".")
+    filename = f"ExportBlock-{unzipdir}-Part-1.zip"
+    unzipdir = filename.replace(".zip", "")
+    ####
+
     # 解压
     zipUtil.unzip(filename)
 
